@@ -74,8 +74,6 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
                 print('номер ',number,' для клиента ',id_client,' удален (если он существовал :) )')
             else:
                 print('Клиент с такими данными не найден ')
-
-
         def del_client(id_client = None, name = None): # Функция, позволяющая удалить существующего клиента
             cur.execute("""
                        DELETE FROM phone_numbers WHERE id_client = %s
@@ -87,10 +85,26 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
                        DELETE FROM clients WHERE client_name = %s
                        """, (name,))
 
+        def find_client(id_client=None, name=None, email=None, id_num=None, number=None):
+            cur.execute("""
+                        SELECT * FROM clients c 
+                        JOIN phone_numbers pn ON pn.id_client = c.id_client 
+                        WHERE c.id_client=%s OR client_name=%s OR client_email=%s OR id_num=%s OR number=%s;
+                        """, (id_client,name,email,id_num, number))
+            client_data = cur.fetchall()
+            client_dic = {}
+            # print(client_data)
+            client_dic['ID клиента'] = client_data[0][0]
+            client_dic['Имя'] = client_data[0][1]
+            client_dic['email'] = client_data[0][2]
+            if len(client_data) > 1:
+                for c in range(len(client_data)):
+                    client_dic['телефон(ы)'] = client_data[c][4] + ' ' +client_data[c-1][4]
+            else:
+                client_dic['телефон'] = client_data[0][4]
 
+            print(client_dic)
 
-
-        # Функция, позволяющая найти клиента по его данным (имени, фамилии, email-у или телефону)
 
 
         # drop_table()
@@ -100,4 +114,5 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
         # change_data(3,'Piter','email_piter@mail.com')
         # del_number(3,id_num='7')
         # del_number(4, number='89996845328')
-        del_client(id_client=1)
+        # del_client(id_client=1)
+        find_client(id_client=4)
