@@ -25,15 +25,18 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
             );
             """)
             conn.commit()
+
         def create_client(name, email): # Функция, позволяющая добавить нового клиента
             cur.execute("""
             INSERT INTO clients(client_name, client_email) values (%s,%s)
             """, (name,email))
+
         def add_number(id_client, number): # Функция, позволяющая добавить телефон для существующего клиента
             cur.execute("""
             INSERT INTO phone_numbers(id_client, number) values (%s,%s)
             """, (id_client, number))
             print('номер ', number, ' для клиента ', id_client, ' добавлен')
+
         def change_data(id, name = None, email = None): # Функция, позволяющая изменить данные о клиенте
             cur.execute("""
             SELECT id_client FROM clients;
@@ -54,6 +57,7 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
                 print('email изменен')
             else:
                 print('Клиент с таким id не найден')
+
         def del_number(id_client, id_num = None, number = None): #Функция, позволяющая удалить телефон для существующего клиента
             cur.execute("""
                         SELECT id_client FROM clients;
@@ -74,6 +78,7 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
                 print('номер ',number,' для клиента ',id_client,' удален (если он существовал :) )')
             else:
                 print('Клиент с такими данными не найден ')
+
         def del_client(id_client = None, name = None): # Функция, позволяющая удалить существующего клиента
             cur.execute("""
                        DELETE FROM phone_numbers WHERE id_client = %s
@@ -105,8 +110,6 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
 
             print(client_dic)
 
-
-
         # drop_table()
         # create_table(cur)
         # create_client('Adam', 'bog1313@email.com')
@@ -115,4 +118,4 @@ with psycopg2.connect(database="clients_db", user='postgres', password="treeWQ18
         # del_number(3,id_num='7')
         # del_number(4, number='89996845328')
         # del_client(id_client=1)
-        find_client(id_client=4)
+        # find_client(id_client=4)
